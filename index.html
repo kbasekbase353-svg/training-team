@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training Management System</title>
+  <link rel="icon" href="images/ison-rb.png" type="image/png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Main Navbar -->
+    <header id="main-nav" class="main-navbar glass">
+      <div class="nav-content">
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+          <img src="images/ison-rb.png" alt="ISON Logo" class="company-logo">
+        </div>
+        <div id="manager-nav-profile" class="manager-nav-center hidden">
+          <!-- Manager Profile Injected Here -->
+        </div>
+        <div id="nav-exam-center" class="nav-exam-center hidden">
+          <span id="exam-title-display" class="nav-exam-title">Exam</span>
+          <div class="nav-exam-timer-badge">
+            <i data-lucide="timer"></i>
+            <span id="exam-timer">00:00</span>
+          </div>
+        </div>
+        <button id="user-icon-btn" class="nav-icon-btn" onclick="app.toggleLogin()">
+          <i data-lucide="user"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Landing Section -->
+    <section id="landing-section" class="view-section active">
+      <div class="landing-hero">
+        <h1 id="typing-welcome">Welcome to the Training Platform</h1>
+        <div class="landing-cards">
+          <div class="feat-card glass" onclick="window.location.href = 'video.html'">
+            <i data-lucide="video" class="feat-icon"></i>
+            <h3>Videos</h3>
+            <p>Watch lectures and training lessons</p>
+          </div>
+          <div class="feat-card glass" onclick="window.location.href = 'quzi.html'">
+            <i data-lucide="pen-tool" class="feat-icon"></i>
+            <h3>Quizzes</h3>
+            <p>Test your knowledge and solve available quizzes</p>
+          </div>
+          <div class="feat-card glass" onclick="window.location.href = 'materials.html'">
+            <i data-lucide="book-open" class="feat-icon"></i>
+            <h3>Materials</h3>
+            <p>Access scientific materials and documents</p>
+          </div>
+        </div>
+
+        <div class="hero-shapes">
+          <div class="shape"></div>
+          <div class="shape"></div>
+        </div>
+
+        <div class="footer-icons landing-footer">
+          <span class="footer-credit">By Eng Ahmed Mohamed</span>
+          <div class="icons-row">
+            <a href="https://web.facebook.com/ahmed.mohamed.857575" target="_blank" title="Facebook"
+              class="social-icon facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://wa.me/201159768514" target="_blank" title="WhatsApp" class="social-icon whatsapp"><i
+                class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.linkedin.com/in/ahmed-mohamed-596713279/" target="_blank" title="LinkedIn"
+              class="social-icon linkedin"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/ahmed_mohamed_40/?__pwa=1" target="_blank" title="Instagram"
+              class="social-icon instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Selection Section -->
+    <section id="category-selection-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('landing')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo">Select Account Type</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="category-grid">
+          <div class="category-card glass" onclick="app.selectCategory('national')">
+            <div class="category-icon">
+              <i data-lucide="globe"></i>
+            </div>
+            <h3>National</h3>
+            <p>Access National accounts and trainers</p>
+          </div>
+          <div class="category-card glass" onclick="app.selectCategory('offshore')">
+            <div class="category-icon">
+              <i data-lucide="ship"></i>
+            </div>
+            <h3>Offshore</h3>
+            <p>Access Offshore accounts and trainers</p>
+          </div>
+          <div class="category-card glass vodafone-card" onclick="app.selectCategory('vodafone')">
+            <div class="category-icon">
+              <i data-lucide="phone-call"></i>
+            </div>
+            <h3>Vodafone</h3>
+            <p>Access Vodafone accounts and trainers</p>
+          </div>
+        </div>
+      </main>
+    </section>
+
+
+    <!-- Video Accounts View Section -->
+    <section id="video-accounts-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('landing')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo">Video Sections</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="account-grid" id="video-account-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Video List View Section -->
+    <section id="video-list-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('video-accounts')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo" id="video-account-title">Available Videos</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="video-grid" id="video-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    </section>
+
+    <!-- Material Accounts View Section -->
+    <section id="material-accounts-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('landing')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo">Scientific Materials</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="account-grid" id="material-account-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Material List View Section -->
+    <section id="material-list-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('material-accounts')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo" id="material-account-title">Available Materials</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="material-grid" id="student-material-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Exam Accounts View Section -->
+    <section id="exam-accounts-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('landing')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back</span>
+        </button>
+        <div class="logo">Quiz Sections</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="account-grid" id="exam-account-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Exam Interface Section -->
+    <section id="exam-view-section" class="view-section">
+      <main class="dashboard-content">
+        <div class="exam-container">
+          <div id="exam-pass-panel" class="login-card glass">
+            <div class="login-header">
+              <i data-lucide="lock" class="icon-primary"></i>
+              <h3>Quiz Password</h3>
+              <p>Please enter the 4-digit code to start the test</p>
+            </div>
+            <div class="input-group">
+              <input type="password" id="exam-pass-input" placeholder="Enter code here..." style="
+                    text-align: center;
+                    letter-spacing: 0.5rem;
+                    font-size: 1.5rem;
+                  " />
+            </div>
+            <button class="btn-primary" onclick="app.startExam()">
+              Start Exam
+            </button>
+          </div>
+          <div id="exam-info-panel" class="login-card glass hidden" style="max-width: 550px; width: 100%; margin: 1rem auto; padding: 2rem 2.2rem;">
+            <div class="login-header" style="margin-bottom: 1.5rem;">
+              <i data-lucide="user-check" class="icon-primary"></i>
+              <h3>Trainee Information / بيانات المتدرب</h3>
+              <p>Please enter your information to start the quiz / يرجى إدخال بيانات المتدرب لبدء الاختبار</p>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.1rem; text-align: left;">
+              <label for="student-name-input" style="font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span>1. Name:</span>
+                <span dir="rtl">الاسم <span style="color: #ef4444;">*</span></span>
+              </label>
+              <input type="text" id="student-name-input" placeholder="Enter your answer" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.6rem; font-size: 0.95rem;" />
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.1rem; text-align: left;">
+              <label for="student-mobile-input" style="font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span>2. Mobile Number:</span>
+                <span dir="rtl">رقم الهاتف <span style="color: #ef4444;">*</span></span>
+              </label>
+              <input type="tel" id="student-mobile-input" placeholder="Enter your 11-digit mobile number" maxlength="11" minlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11)" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.6rem; font-size: 0.95rem;" />
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.1rem; text-align: left;">
+              <label for="student-batch-input" style="font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span>3. Batch Number:</span>
+                <span dir="rtl">رقم الدفعه <span style="color: #ef4444;">*</span></span>
+              </label>
+              <input type="text" id="student-batch-input" placeholder="Enter your answer" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.6rem; font-size: 0.95rem;" />
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.1rem; text-align: left;">
+              <label for="student-attendance-input" style="font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span>4. Your Number:</span>
+                <span dir="rtl">رقمك فى ورقه الحضور <span style="color: #ef4444;">*</span></span>
+              </label>
+              <input type="text" id="student-attendance-input" placeholder="Enter your answer" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.6rem; font-size: 0.95rem;" />
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.4rem; text-align: left;">
+              <label for="student-trainer-input" style="font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span>5. Your Trainer:</span>
+                <span dir="rtl">اسم مدربك <span style="color: #ef4444;">*</span></span>
+              </label>
+              <input type="text" id="student-trainer-input" placeholder="Enter your answer" required style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.6rem; font-size: 0.95rem;" />
+            </div>
+
+            <button class="btn-primary" style="width: 100%; padding: 0.85rem; font-weight: 700; font-size: 1rem; border-radius: 0.75rem;" onclick="app.proceedToQuestions()">
+              Continue to Quiz / بدء الاختبار
+            </button>
+          </div>
+
+          <div id="exam-questions-panel" class="exam-card glass hidden">
+            <!-- Questions injected here -->
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login-section" class="view-section">
+      <div class="login-container">
+        <div class="login-card glass">
+          <div class="login-header">
+            <i data-lucide="shield-check" class="icon-primary larger"></i>
+            <h1>Welcome to the Training System</h1>
+            <p>Please log in to continue</p>
+          </div>
+          <form id="login-form">
+            <div class="input-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" required placeholder="Enter username" />
+            </div>
+            <div class="input-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" required placeholder="Enter password" />
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+          </form>
+          <div id="login-error" class="error-msg hidden">
+            Invalid login credentials!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Dashboard Section -->
+    <section id="admin-dashboard-section" class="view-section">
+      <header class="top-bar">
+        <div class="user-info">
+          <span class="user-name">General Manager</span>
+          <button class="btn-logout" onclick="app.editAdminProfile()" title="Account Settings"
+            style="background: var(--primary); color: white">
+            <i data-lucide="settings"></i>
+          </button>
+          <button class="btn-logout" onclick="app.logout()">
+            <i data-lucide="log-out"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+        <div class="logo">
+          <img src="images/ison-rb.png" alt="ISON Logo">
+        </div>
+      </header>
+      <main class="dashboard-content">
+        <div class="admin-nav-tabs">
+          <button class="admin-tab active" onclick="app.switchAdminTab('accounts')">
+            Accounts
+          </button>
+          <button class="admin-tab" onclick="app.switchAdminTab('leaders')">
+            Manage Leaders
+          </button>
+          <button class="admin-tab" onclick="app.switchAdminTab('managers')">
+            Manage Managers
+          </button>
+          <button class="admin-tab" onclick="app.switchAdminTab('videos')">
+            Manage Videos
+          </button>
+          <button class="admin-tab" onclick="app.switchAdminTab('materials')">
+            Manage Materials
+          </button>
+          <button class="admin-tab" onclick="app.switchAdminTab('exams')">
+            Manage Quizzes
+          </button>
+          <button class="admin-tab btn-admin-settings" onclick="app.editAdminProfile()" title="Admin Settings (Change Username & Password)">
+            <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+            <span>Settings</span>
+          </button>
+          <button class="admin-tab btn-admin-logout" onclick="app.logout()" title="Logout from Admin">
+            <i data-lucide="log-out" style="width: 16px; height: 16px;"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+
+        <div id="admin-panel-accounts" class="admin-panel active">
+          <div class="section-title">
+            <h2>Select Account</h2>
+            <p>Choose an account to manage trainers</p>
+          </div>
+          <div class="account-grid" id="account-grid">
+            <!-- Cards will be injected by JS -->
+          </div>
+        </div>
+
+        <div id="admin-panel-videos" class="admin-panel">
+          <div class="section-title">
+            <h2>Manage Videos</h2>
+            <p>Add and delete videos for each account</p>
+          </div>
+          <div class="video-admin-controls glass">
+            <select id="video-select-account">
+              <!-- Options injected -->
+            </select>
+            <input type="text" id="video-title" placeholder="Video Title" />
+            <input type="text" id="video-url" placeholder="Google Drive or YouTube Link" />
+            <button class="btn-primary" onclick="app.addVideo()">
+              Add Video
+            </button>
+          </div>
+          <div id="video-admin-list" class="admin-list">
+            <!-- List injected -->
+          </div>
+        </div>
+
+        <div id="admin-panel-materials" class="admin-panel">
+          <div class="section-title">
+            <h2>Manage Scientific Materials</h2>
+            <p>Add scientific materials for each account, visible to all trainers of the account</p>
+          </div>
+          <div class="video-admin-controls glass" style="grid-template-columns: 1fr 1fr 1fr auto">
+            <select id="material-select-account">
+              <!-- Options injected -->
+            </select>
+            <input type="text" id="material-name" placeholder="Material Name" />
+            <input type="text" id="material-url" placeholder="Google Drive Link" />
+            <button class="btn-primary" onclick="app.addMaterial()">
+              Add Material
+            </button>
+          </div>
+          <div id="material-admin-list" class="admin-list">
+            <!-- List injected -->
+          </div>
+        </div>
+
+        <div id="admin-panel-exams" class="admin-panel">
+          <div class="section-title">
+            <h2>Manage Quizzes</h2>
+            <p>Program quizzes for each account and set entry conditions</p>
+          </div>
+          <div class="video-admin-controls glass">
+            <select id="exam-select-account">
+              <!-- Options injected -->
+            </select>
+            <button class="btn-primary" onclick="app.setupNewExam()">
+              Program New Exam
+            </button>
+          </div>
+          <div id="exam-admin-list" class="admin-list">
+            <!-- List injected -->
+          </div>
+        </div>
+
+        <!-- Add Leaders Panel -->
+        <div id="admin-panel-leaders" class="admin-panel">
+          <div class="section-title">
+            <h2>Manage Leader Accounts</h2>
+            <p>Team leaders who can review and activate trainer data</p>
+          </div>
+          <button class="btn-primary" style="margin-bottom: 2rem" onclick="app.addNewLeader()">
+            <i data-lucide="plus"></i> Add New Leader
+          </button>
+          <div class="admin-list" id="leaders-list">
+            <!-- Leaders will be injected here -->
+          </div>
+        </div>
+
+        <!-- Add Managers Panel -->
+        <div id="admin-panel-managers" class="admin-panel">
+          <div class="section-title">
+            <h2>Manage Manager Accounts</h2>
+            <p>Global view access with full analytics and filtering</p>
+          </div>
+          <button class="btn-primary" style="margin-bottom: 2rem; background: var(--accent); border: none;"
+            onclick="app.addNewManager()">
+            <i data-lucide="plus"></i> Add New Manager
+          </button>
+          <div class="admin-list" id="managers-list">
+            <!-- Managers will be injected here -->
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- Account Leaders View Section: Account -> Leaders -->
+    <section id="account-leaders-view-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" onclick="app.navigateTo('admin-dashboard')">
+          <i data-lucide="arrow-left"></i>
+          <span>Back to Accounts</span>
+        </button>
+        <div class="logo" id="account-leaders-logo-name">Account Leaders</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+          <div>
+            <h2 id="account-leaders-title">Account Leaders</h2>
+            <p id="account-leaders-subtitle">Choose a leader to manage their trainers</p>
+          </div>
+          <button class="btn-sleek" onclick="app.navigateTo('admin-dashboard')" title="Back to Accounts">
+            <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+            <span>Back to Accounts</span>
+          </button>
+        </div>
+        <div class="account-grid" id="account-leaders-grid">
+          <!-- Leaders will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Account Trainer View Section: Account -> Leader -> Trainers -->
+    <section id="account-view-section" class="view-section">
+      <header class="top-bar">
+        <button class="btn-back" id="btn-back-to-leaders" onclick="app.viewAccount(app.currentAccount ? app.currentAccount.id : null)">
+          <i data-lucide="arrow-left"></i>
+          <span>Back to Leaders</span>
+        </button>
+        <div class="logo" id="current-account-name">Trainers List</div>
+      </header>
+      <main class="dashboard-content">
+        <div class="section-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+          <div>
+            <h2 id="current-account-title">Trainers List</h2>
+            <p id="current-account-subtitle">Manage trainers, activation status, and KPIs</p>
+          </div>
+          <button class="btn-sleek btn-back-to-accounts" id="btn-back-to-leaders-sleek" onclick="app.viewAccount(app.currentAccount ? app.currentAccount.id : null)" title="Back to Leaders">
+            <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+            <span>Back to Leaders</span>
+          </button>
+        </div>
+        <div class="trainer-grid" id="trainer-grid">
+          <!-- Cards will be injected by JS -->
+        </div>
+      </main>
+    </section>
+
+    <!-- Leader Dashboard Section -->
+    <section id="leader-dashboard-section" class="view-section">
+      <header class="top-bar manager-top-bar">
+        <!-- Left: Logout -->
+        <div class="manager-bar-left">
+          <button class="btn-logout" onclick="app.logout()">
+            <i data-lucide="log-out"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+
+        <!-- Center: Profile Info -->
+        <div class="manager-bar-center" id="leader-profile-center">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Right: Logo -->
+        <div class="manager-bar-right">
+          <img src="images/ison-rb.png" alt="ISON Logo" class="manager-nav-logo">
+        </div>
+      </header>
+      <main class="dashboard-content">
+        <div class="section-title"
+          style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+          <h2 style="margin: 0;">Accounts and Trainers</h2>
+        </div>
+        <!-- Here we will inject accounts and their trainers -->
+        <div id="leader-accounts-container" style="display: flex; flex-direction: column; gap: 0.5rem"></div>
+      </main>
+    </section>
+
+    <!-- Trainer Dashboard Section -->
+    <section id="trainer-dashboard-section" class="view-section">
+      <div class="sidebar-overlay" id="sidebar-overlay" onclick="app.toggleSidebar()"></div>
+      <div class="trainer-layout">
+        <button id="menu-toggle" class="menu-toggle" onclick="app.toggleSidebar()">
+          <i data-lucide="menu"></i>
+        </button>
+        <aside class="sidebar" id="dashboard-sidebar">
+          <div class="sidebar-header">
+            <span id="sidebar-trainer-status" class="status-indicator"></span>
+            <div class="avatar" id="sidebar-avatar"></div>
+            <h3 id="sidebar-trainer-name">Trainer</h3>
+            <span class="badge" id="sidebar-account-name">Account</span>
+          </div>
+          <nav class="sidebar-nav">
+            <button class="nav-item active" onclick="app.switchTrainerTab('dashboard')">
+              <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('schedule')">
+              <i data-lucide="calendar"></i> <span>Schedule</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('material')">
+              <i data-lucide="book-open"></i> <span>Material</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('exams')">
+              <i data-lucide="clipboard-list"></i> <span>Quiz</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('kpis')">
+              <i data-lucide="bar-chart-2"></i> <span>KPIs</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('updata')">
+              <i data-lucide="database-zap"></i> <span>Updata</span>
+            </button>
+            <button class="nav-item" onclick="app.switchTrainerTab('history')">
+              <i data-lucide="history"></i> <span>History</span>
+            </button>
+          </nav>
+
+          <div class="footer-icons sidebar-footer">
+            <span class="footer-credit">By Eng Ahmed Mohamed</span>
+            <div class="icons-row">
+              <a href="https://web.facebook.com/ahmed.mohamed.857575" target="_blank" title="Facebook"
+                class="social-icon facebook"><i class="fa-brands fa-facebook"></i></a>
+              <a href="https://wa.me/201159768514" target="_blank" title="WhatsApp" class="social-icon whatsapp"><i
+                  class="fa-brands fa-whatsapp"></i></a>
+              <a href="https://www.linkedin.com/in/ahmed-mohamed-596713279/" target="_blank" title="LinkedIn"
+                class="social-icon linkedin"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="https://www.instagram.com/ahmed_mohamed_40/?__pwa=1" target="_blank" title="Instagram"
+                class="social-icon instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+
+          <button class="btn-logout-sidebar" onclick="app.logout()">
+            <i data-lucide="log-out"></i> <span>Logout</span>
+          </button>
+
+        </aside>
+        <main class="main-content">
+          <div id="trainer-content-dashboard" class="tab-content active">
+            <h2 class="tab-title">Performance Dashboard</h2>
+            <div class="dashboard-stats-grid">
+              <!-- Stats cards injected here -->
+            </div>
+            <div class="dashboard-charts-grid">
+              <div class="chart-card glass">
+                <h3>Batch Performance History</h3>
+                <canvas id="batch-performance-chart"></canvas>
+              </div>
+              <div class="chart-card glass">
+                <h3>Pass vs Fail Distribution</h3>
+                <canvas id="pass-fail-pie-chart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div id="trainer-content-schedule" class="tab-content">
+            <div class="content-header">
+              <div style="display: flex; align-items: center; gap: 1rem">
+                <h2 class="tab-title" style="margin-bottom: 0">
+                  Schedule
+                </h2>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center">
+                <div class="admin-actions" id="schedule-admin-actions" style="display: flex; gap: 0.5rem">
+                  <button class="btn-primary" onclick="app.importScheduleImage()">
+                    <i data-lucide="upload"></i> <span>Upload Image</span>
+                  </button>
+                  <input type="file" id="schedule-img-upload" accept="image/*" onchange="app.handleScheduleImageUpload(this)" hidden />
+                </div>
+              </div>
+            </div>
+            <div class="schedule-container glass" id="excel-sheet-container">
+              <!-- Schedule image or empty state injected here -->
+            </div>
+          </div>
+
+          <div id="trainer-content-material" class="tab-content">
+            <h2 class="tab-title">Scientific Material</h2>
+            <div class="material-grid" id="material-list">
+              <!-- Material cards here -->
+            </div>
+          </div>
+
+          <div id="trainer-content-history" class="tab-content">
+            <h2 class="tab-title">Training History (Batches)</h2>
+            <div class="history-content glass">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Batch #</th>
+                    <th>Date</th>
+                    <th>Pass</th>
+                    <th>Fail</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="history-body">
+                  <!-- History items here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="trainer-content-exams" class="tab-content">
+            <div class="content-header">
+              <h2 class="tab-title">Manage Quizzes</h2>
+              <button class="btn-primary" onclick="app.showExamCreator()">
+                <i data-lucide="plus"></i> <span>Create New Quiz</span>
+              </button>
+            </div>
+
+            <!-- Exam List for Trainer -->
+            <div id="trainer-exam-list" class="admin-list" style="margin-top: 2rem">
+              <!-- Trainer's exams injected here -->
+            </div>
+
+            <!-- Exam Creator Panel (Hidden by default) -->
+            <div id="exam-creator-panel" class="exam-creator-card glass hidden" style="margin-top: 2rem">
+              <div class="login-header" style="margin-bottom: 2rem">
+                <i data-lucide="plus-circle" class="icon-primary"></i>
+                <h3 id="creator-title">Create New Quiz</h3>
+                <button class="btn-delete"
+                  style="position: absolute; top: 1rem; right: 1rem; background: transparent; color: #ef4444;"
+                  onclick="app.hideExamCreator()">
+                  ×
+                </button>
+              </div>
+              <div class="input-group">
+                <label>Quiz Name</label>
+                <input type="text" id="new-exam-name" placeholder="Example: Weekly Maintenance Test" />
+              </div>
+
+              <div id="questions-container">
+                <!-- Question forms injected here -->
+              </div>
+
+              <div class="creator-actions">
+                <button class="btn-secondary" onclick="app.addQuestionToCreator()">
+                  <i data-lucide="plus-circle"></i> Add Another Question
+                </button>
+                <button class="btn-primary" onclick="app.saveCreatedExam()">
+                  <i data-lucide="save"></i> Save Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="trainer-content-updata" class="tab-content">
+            <div style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 1.5rem;
+                ">
+              <h2 class="tab-title" style="margin-bottom: 0">
+                Up Data
+              </h2>
+              <div style="
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                    justify-content: flex-end;
+                  ">
+                <button class="btn-sleek" style="
+                      background: var(--accent);
+                      color: white;
+                      border-color: var(--accent);
+                    " onclick="app.saveUpData()">
+                  <i data-lucide="save"></i> <span>Save</span>
+                </button>
+                <button class="btn-sleek" onclick="app.exportUpDataToExcel()">
+                  <i data-lucide="download"></i> <span>Download</span>
+                </button>
+              </div>
+            </div>
+            <div class="excel-wrapper glass" id="updata-container">
+              <!-- Dynamic Table Injected Here -->
+            </div>
+          </div>
+          <div id="trainer-content-kpis" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h2 class="tab-title" style="margin-bottom: 0.2rem;">KPIs & Performance Scorecard</h2>
+              </div>
+            </div>
+            <div id="trainer-kpis-container">
+              <!-- Dynamically injected KPI scorecard & matrix -->
+            </div>
+          </div>
+        </main>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Manager Dashboard Section -->
+  <section id="manager-dashboard-section" class="view-section">
+    <header class="top-bar manager-top-bar">
+      <!-- Left: Logout -->
+      <div class="manager-bar-left">
+        <button class="btn-logout" onclick="app.logout()">
+          <i data-lucide="log-out"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+
+      <!-- Center: Manager Profile -->
+      <div class="manager-bar-center" id="manager-profile-center">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Right: Logo -->
+      <div class="manager-bar-right">
+        <img src="images/ison-rb.png" alt="ISON Logo" class="manager-nav-logo">
+      </div>
+    </header>
+
+    <div class="sidebar-overlay" id="manager-sidebar-overlay" onclick="app.toggleManagerSidebar()"></div>
+    <div class="manager-dashboard-layout">
+      <button id="manager-menu-toggle" class="menu-toggle" onclick="app.toggleManagerSidebar()">
+        <i data-lucide="menu"></i>
+      </button>
+      <!-- Manager Sidebar -->
+      <aside class="manager-sidebar glass" id="manager-sidebar">
+        <div class="sidebar-filter-wrapper">
+          <div class="sidebar-section">
+            <h4 class="sidebar-section-title"><i data-lucide="layers"></i> Accounts</h4>
+            <div id="manager-acc-filters" class="sidebar-filter-list"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Manager Main Content -->
+      <main class="manager-main-content">
+        <!-- Trainer Top Bar -->
+        <div class="manager-trainer-bar glass shadow-sm">
+          <div class="trainer-bar-header">
+            <h4><i data-lucide="users"></i> Trainers</h4>
+            <div id="manager-trainer-search-container"></div>
+          </div>
+          <div id="manager-trainer-filters" class="trainer-filter-row"></div>
+        </div>
+
+        <div id="manager-stats-container" class="dashboard-stats-grid">
+          <!-- Dynamic Stats Cards -->
+        </div>
+
+        <div class="dashboard-charts-grid">
+          <div class="chart-card glass">
+            <h3>Batch Performance History</h3>
+            <canvas id="managerBarChart"></canvas>
+          </div>
+          <div class="chart-card glass">
+            <h3>Overall Distribution</h3>
+            <div style="flex: 1; width: 100%; height: 100%; min-height: 360px; display: flex; justify-content: center; align-items: center; position: relative;">
+              <canvas id="managerDoughnutChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- Modals -->
+  <div id="modal-container" class="modal-overlay hidden">
+    <div class="modal-card glass" id="modal-content">
+      <!-- Modal content injected here -->
+    </div>
+  </div>
+
+  <!-- Custom Alert Popup -->
+  <div id="custom-alert-overlay">
+    <div class="custom-alert-card" id="custom-alert-card">
+      <div class="custom-alert-icon-wrap" id="custom-alert-icon"></div>
+      <div class="custom-alert-title" id="custom-alert-title"></div>
+      <div class="custom-alert-msg" id="custom-alert-msg"></div>
+      <button class="custom-alert-btn" onclick="app.closeAlert()">OK</button>
+    </div>
+  </div>
+
+  <!-- Custom Confirm Popup -->
+  <div id="custom-confirm-overlay">
+    <div class="custom-confirm-card" id="custom-confirm-card">
+      <div class="custom-confirm-icon-wrap" id="custom-confirm-icon">
+        <i data-lucide="help-circle"></i>
+      </div>
+      <div class="custom-confirm-title" id="custom-confirm-title">Confirm Action</div>
+      <div class="custom-confirm-msg" id="custom-confirm-msg"></div>
+      <div class="custom-confirm-btns">
+        <button class="confirm-btn-yes" id="confirm-btn-yes">OK</button>
+        <button class="confirm-btn-no" id="confirm-btn-no" onclick="app.closeConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Chatbot Interface (Manager Dashboard Only) -->
+  <div id="ai-chatbot-container" class="hidden">
+    <!-- Custom Modal for Chatbot Actions -->
+    <div id="chatbot-modal" class="chatbot-modal-overlay">
+      <div class="chatbot-modal glass shadow-2xl">
+        <div class="modal-content">
+          <i data-lucide="alert-triangle" class="modal-icon"></i>
+          <h3>Clear History?</h3>
+          <p>Are you sure you want to clear your chat history? This action cannot be undone.</p>
+          <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="chatbot.closeModal()">Cancel</button>
+            <button class="modal-btn confirm" onclick="chatbot.confirmClear()">Clear Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button id="chatbot-toggle-btn" class="chatbot-fab shadow-lg" onclick="chatbot.toggle()">
+      <i data-lucide="bot"></i>
+    </button>
+
+    <div id="chatbot-window" class="chatbot-window glass shadow-xl hidden">
+      <div class="chatbot-header">
+        <div class="chatbot-header-info">
+          <i data-lucide="sparkles" class="icon-secondary"></i>
+          <div>
+            <h4>ISON AI Assistant</h4>
+            <p>Online | Manager Support</p>
+          </div>
+        </div>
+        <div class="chatbot-header-actions">
+          <button class="chatbot-action-btn clear" onclick="chatbot.clear()" title="Clear Chat">
+            <i data-lucide="trash-2"></i>
+          </button>
+          <button class="chatbot-action-btn close" onclick="chatbot.toggle()" title="Close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="chatbot-messages" class="chatbot-messages">
+        <div class="message bot">
+          <div class="msg-bubble">
+            Welcome! I am your smart assistant. How can I help you today regarding the training data?
+          </div>
+        </div>
+      </div>
+
+      <div id="chatbot-typing" class="chatbot-typing hidden">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Type your question..."
+          onkeypress="if(event.key === 'Enter') chatbot.handleSend()">
+        <button id="chatbot-send" onclick="chatbot.handleSend()">
+          <i data-lucide="send"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <script src="security.js"></script> -->
+  <button id="back-to-top-btn" class="back-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to Top">
+    <i data-lucide="arrow-up"></i>
+  </button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="chatbot.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
